@@ -108,7 +108,7 @@
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:clickable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/imageAddWebLink"
             android:layout_width="@dimen/_23sdp"
             android:layout_height="@dimen/_23sdp"
