@@ -2,6 +2,7 @@ package com.tommunyiri.notes.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(getApplicationContext(), CreateNoteActivity.class),REQUEST_CODE_ADD_NOTE);
             }
         });
+        //TODO Enable switching between LinearLayout and StaggeredGridLayout
+        //binding.notesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList=new ArrayList<>();
         notesAdapter=new NotesAdapter(noteList);

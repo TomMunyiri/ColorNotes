@@ -73,6 +73,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setSubtitle(binding.inputNoteSubtitle.getText().toString());
         note.setNoteText(binding.inputNoteText.getText().toString());
         note.setDateTime(binding.textDateTime.getText().toString());
+        note.setColor(selectedNoteColor);
 
         @SuppressLint("StaticFieldLeak")
         class SaveNoteTask extends AsyncTask<Void, Void, Void>{
