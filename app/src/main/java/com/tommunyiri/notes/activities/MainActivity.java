@@ -1,6 +1,8 @@
 package com.tommunyiri.notes.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,25 +12,36 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.tommunyiri.notes.R;
+import com.tommunyiri.notes.adapters.NotesAdapter;
 import com.tommunyiri.notes.database.NotesDatabase;
+import com.tommunyiri.notes.databinding.ActivityMainBinding;
 import com.tommunyiri.notes.entities.Note;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
     public static final int REQUEST_CODE_ADD_NOTE = 1;
+    private List<Note> noteList;
+    private NotesAdapter notesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ImageView imageAddNoteMain = findViewById(R.id.imageAddNoteMain);
-        imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View v = binding.getRoot();
+        setContentView(v);
+        binding.imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(getApplicationContext(), CreateNoteActivity.class),REQUEST_CODE_ADD_NOTE);
             }
         });
+        binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        noteList=new ArrayList<>();
+        notesAdapter=new NotesAdapter(noteList);
+        binding.notesRecyclerView.setAdapter(notesAdapter);
         getNotes();
     }
 
@@ -42,9 +55,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
-                Log.d("MY_NOTES",notes.toString());
+                if(noteList.size()==0){
+                    noteList.addAll(notes);
+                    notesAdapter.notifyDataSetChanged();
+                }else{
+                    noteList.add(0,notes.get(0));
+                    notesAdapter.notifyItemInserted(0);
+                }
+                binding.notesRecyclerView.smoothScrollToPosition(0);
             }
         }
         new GetNoteTask().execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_CODE_ADD_NOTE && resultCode==RESULT_OK){
+            getNotes();
+        }
     }
 }
