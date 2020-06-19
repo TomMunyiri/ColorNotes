@@ -4,4 +4,6 @@
     <string name="my_notes">My Notes</string>
     <string name="note_title">Note title</string>
     <string name="note_subtitle">Note subtitle</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="note_color">Note color</string>
 </resources>
