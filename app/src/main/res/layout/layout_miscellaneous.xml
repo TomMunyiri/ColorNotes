@@ -139,21 +139,39 @@
             android:textSize="@dimen/_13ssp" />
     </LinearLayout>
 
-        <TextView
-            android:id="@+id/textAddImage"
-            android:layout_margin="@dimen/_10sdp"
-            android:drawableLeft="@drawable/ic_image"
-            android:drawableTint="@color/colorIcons"
-            android:drawablePadding="@dimen/_10sdp"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:fontFamily="@font/ubuntu_medium"
-            android:includeFontPadding="false"
-            android:text="@string/add_image"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/_12ssp"
-            android:drawableStart="@drawable/ic_image" />
+    <TextView
+        android:id="@+id/textAddImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:drawableStart="@drawable/ic_image"
+        android:drawableLeft="@drawable/ic_image"
+        android:drawablePadding="@dimen/_10sdp"
+        android:drawableTint="@color/colorIcons"
+        android:fontFamily="@font/ubuntu_medium"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/add_image"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_12ssp" />
+
+    <TextView
+        android:id="@+id/textAddUrl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:drawableStart="@drawable/ic_web_link"
+        android:drawableLeft="@drawable/ic_web_link"
+        android:drawablePadding="@dimen/_10sdp"
+        android:drawableTint="@color/colorIcons"
+        android:fontFamily="@font/ubuntu_medium"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/add_web_link"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_12ssp" />
 </LinearLayout>

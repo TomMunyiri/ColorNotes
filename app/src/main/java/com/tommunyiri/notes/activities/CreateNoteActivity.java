@@ -2,6 +2,7 @@ package com.tommunyiri.notes.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,12 +15,17 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -42,8 +48,9 @@ public class CreateNoteActivity extends AppCompatActivity {
     private String selectedNoteColor;
     private String selectedImagePath;
     private View viewSubtitleIndicator;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION=1;
-    private static final int REQUEST_CODE_SELECT_IMAGE=2;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private AlertDialog dialogAddURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +76,19 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         });
 
-        selectedNoteColor="#333333";
-        selectedImagePath="";
+        selectedNoteColor = "#333333";
+        selectedImagePath = "";
 
         initMiscellaneous();
         setSubtitleIndicatorColor();
     }
 
-    private void saveNote(){
-        if(binding.inputNoteTitle.getText().toString().trim().isEmpty()){
-            Toasty.warning(this,"Note title can't be empty!",Toasty.LENGTH_SHORT,true).show();
+    private void saveNote() {
+        if (binding.inputNoteTitle.getText().toString().trim().isEmpty()) {
+            Toasty.warning(this, "Note title can't be empty!", Toasty.LENGTH_SHORT, true).show();
             return;
-        }else if(binding.inputNoteSubtitle.getText().toString().trim().isEmpty()&&binding.inputNoteText.getText().toString().trim().isEmpty()){
-            Toasty.warning(this,"Note can't be empty!",Toasty.LENGTH_SHORT,true).show();
+        } else if (binding.inputNoteSubtitle.getText().toString().trim().isEmpty() && binding.inputNoteText.getText().toString().trim().isEmpty()) {
+            Toasty.warning(this, "Note can't be empty!", Toasty.LENGTH_SHORT, true).show();
             return;
         }
         final Note note = new Note();
@@ -91,9 +98,12 @@ public class CreateNoteActivity extends AppCompatActivity {
         note.setDateTime(binding.textDateTime.getText().toString());
         note.setColor(selectedNoteColor);
         note.setImagePath(selectedImagePath);
+        if(binding.layoutWebURL.getVisibility()==View.VISIBLE){
+            note.setWebLink(binding.textWebURL.getText().toString());
+        }
 
         @SuppressLint("StaticFieldLeak")
-        class SaveNoteTask extends AsyncTask<Void, Void, Void>{
+        class SaveNoteTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 NotesDatabase.getNotesDatabase(getApplicationContext()).noteDao().insertNote(note);
@@ -103,8 +113,8 @@ public class CreateNoteActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Intent intent= new Intent();
-                setResult(RESULT_OK,intent);
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
         }
@@ -135,7 +145,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.viewColor1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedNoteColor="#333333";
+                selectedNoteColor = "#333333";
                 imageColor1.setImageResource(R.drawable.ic_done);
                 imageColor2.setImageResource(0);
                 imageColor3.setImageResource(0);
@@ -148,7 +158,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedNoteColor="#FDBE38";
+                selectedNoteColor = "#FDBE38";
                 imageColor1.setImageResource(0);
                 imageColor2.setImageResource(R.drawable.ic_done);
                 imageColor3.setImageResource(0);
@@ -161,7 +171,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.viewColor3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedNoteColor="#E10606";
+                selectedNoteColor = "#E10606";
                 imageColor1.setImageResource(0);
                 imageColor2.setImageResource(0);
                 imageColor3.setImageResource(R.drawable.ic_done);
@@ -174,7 +184,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.viewColor4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedNoteColor="#3A52FC";
+                selectedNoteColor = "#3A52FC";
                 imageColor1.setImageResource(0);
                 imageColor2.setImageResource(0);
                 imageColor3.setImageResource(0);
@@ -187,7 +197,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         layoutMiscellaneous.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedNoteColor="#000000";
+                selectedNoteColor = "#000000";
                 imageColor1.setImageResource(0);
                 imageColor2.setImageResource(0);
                 imageColor3.setImageResource(0);
@@ -200,37 +210,44 @@ public class CreateNoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(CreateNoteActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(CreateNoteActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             REQUEST_CODE_STORAGE_PERMISSION);
-                }else{
+                } else {
                     selectImage();
                 }
             }
         });
+        layoutMiscellaneous.findViewById(R.id.textAddUrl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                showAddURLDialog();
+            }
+        });
     }
 
-    private void setSubtitleIndicatorColor(){
-        GradientDrawable gradientDrawable=(GradientDrawable) binding.viewSubtitleIndicator.getBackground();
+    private void setSubtitleIndicatorColor() {
+        GradientDrawable gradientDrawable = (GradientDrawable) binding.viewSubtitleIndicator.getBackground();
         gradientDrawable.setColor(Color.parseColor(selectedNoteColor));
     }
 
-    private void selectImage(){
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if(intent.resolveActivity(getPackageManager())!=null){
-            startActivityForResult(intent,REQUEST_CODE_SELECT_IMAGE);
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==REQUEST_CODE_STORAGE_PERMISSION && grantResults.length>0){
-            if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
-            }else {
-                Toasty.error(this,"Permission Denied", Toasty.LENGTH_SHORT,true).show();
+            } else {
+                Toasty.error(this, "Permission Denied", Toasty.LENGTH_SHORT, true).show();
             }
         }
     }
@@ -238,33 +255,70 @@ public class CreateNoteActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE_SELECT_IMAGE && resultCode==RESULT_OK){
-            Uri selectedImageUri=data.getData();
-            if(data!=null){
-                try{
-                    InputStream inputStream=getContentResolver().openInputStream(selectedImageUri);
-                    Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            if (data != null) {
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     binding.imageNote.setImageBitmap(bitmap);
                     binding.imageNote.setVisibility(View.VISIBLE);
 
-                    selectedImagePath=getPathFromUri(selectedImageUri);
-                }catch (Exception exception){
-                    Toasty.error(this, exception.getMessage(), Toast.LENGTH_SHORT,true).show();
+                    selectedImagePath = getPathFromUri(selectedImageUri);
+                } catch (Exception exception) {
+                    Toasty.error(this, exception.getMessage(), Toast.LENGTH_SHORT, true).show();
                 }
             }
         }
     }
-    private String getPathFromUri(Uri contentUri){
+
+    private String getPathFromUri(Uri contentUri) {
         String filePath;
-        Cursor cursor=getContentResolver().query(contentUri,null,null,null,null);
-        if(cursor==null){
-            filePath=contentUri.getPath();
-        }else{
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        if (cursor == null) {
+            filePath = contentUri.getPath();
+        } else {
             cursor.moveToFirst();
-            int index=cursor.getColumnIndex("_data");
-            filePath=cursor.getString(index);
+            int index = cursor.getColumnIndex("_data");
+            filePath = cursor.getString(index);
             cursor.close();
         }
         return filePath;
+    }
+
+    private void showAddURLDialog(){
+        if(dialogAddURL==null){
+            AlertDialog.Builder builder=new AlertDialog.Builder(CreateNoteActivity.this);
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_add_url,(ViewGroup)findViewById(R.id.layoutAddUrlContainer));
+            builder.setView(view);
+            dialogAddURL=builder.create();
+            if(dialogAddURL.getWindow()!=null){
+                dialogAddURL.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            //TODO replace findview by id with view binding
+            final EditText inputURL=view.findViewById(R.id.inputURL);
+            inputURL.requestFocus();
+            view.findViewById(R.id.textAdd).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(inputURL.getText().toString().trim().isEmpty()){
+                        Toasty.warning(CreateNoteActivity.this,"Enter Web Link", Toasty.LENGTH_SHORT,true).show();
+                    }else if(!Patterns.WEB_URL.matcher(inputURL.getText().toString()).matches()){
+                        Toasty.warning(CreateNoteActivity.this,"Enter a valid Web Link", Toasty.LENGTH_SHORT,true).show();
+                    }else{
+                        binding.textWebURL.setText(inputURL.getText().toString());
+                        binding.layoutWebURL.setVisibility(View.VISIBLE);
+                        dialogAddURL.dismiss();
+                    }
+                }
+            });
+            view.findViewById(R.id.textCancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogAddURL.dismiss();
+                }
+            });
+            dialogAddURL.show();
+        }
     }
 }

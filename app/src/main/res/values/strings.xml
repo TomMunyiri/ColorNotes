@@ -8,4 +8,8 @@
     <string name="note_color">Note color</string>
     <string name="type_note_here">Type note here</string>
     <string name="add_image">Add image</string>
+    <string name="add_web_link">Add web link</string>
+    <string name="enter_web_link">Enter web link</string>
+    <string name="cancel">CANCEL</string>
+    <string name="add">ADD</string>
 </resources>
