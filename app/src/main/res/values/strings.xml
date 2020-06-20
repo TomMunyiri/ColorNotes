@@ -6,4 +6,6 @@
     <string name="note_subtitle">Note subtitle</string>
     <string name="miscellaneous">Miscellaneous</string>
     <string name="note_color">Note color</string>
+    <string name="type_note_here">Type note here</string>
+    <string name="add_image">Add image</string>
 </resources>

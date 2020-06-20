@@ -105,6 +105,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/inputNoteSubtitle"
                 android:layout_marginLeft="@dimen/_12sdp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageNote"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/inputNoteSubtitle"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,7 +127,7 @@
                 android:background="@null"
                 android:fontFamily="@font/ubuntu_regular"
                 android:gravity="top"
-                android:hint="Type note here"
+                android:hint="@string/type_note_here"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
                 android:inputType="textMultiLine"
@@ -125,7 +136,7 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inputNoteSubtitle"/>
+                app:layout_constraintTop_toBottomOf="@+id/imageNote"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
     <include layout="@layout/layout_miscellaneous"

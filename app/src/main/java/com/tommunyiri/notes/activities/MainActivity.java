@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -46,10 +47,22 @@ public class MainActivity extends AppCompatActivity {
         notesAdapter=new NotesAdapter(noteList);
         binding.notesRecyclerView.setAdapter(notesAdapter);
         getNotes();
+        binding.srNotes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                binding.srNotes.setRefreshing(false);
+            }
+        });
     }
 
     private void getNotes(){
         class GetNoteTask extends AsyncTask<Void, Void, List<Note>>{
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                binding.srNotes.setRefreshing(true);
+            }
+
             @Override
             protected List<Note> doInBackground(Void... voids) {
                 return NotesDatabase.getNotesDatabase(getApplicationContext()).noteDao().getAllNotes();
@@ -58,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
+                binding.srNotes.setRefreshing(false);
                 if(noteList.size()==0){
                     noteList.addAll(notes);
                     notesAdapter.notifyDataSetChanged();
