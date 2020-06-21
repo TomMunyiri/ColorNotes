@@ -125,7 +125,8 @@
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/imageNote">
+                app:layout_constraintTop_toBottomOf="@+id/imageNote"
+                tools:ignore="UseCompoundDrawables">
                 <TextView
                     android:id="@+id/textWebURL"
                     android:layout_width="0dp"
@@ -135,6 +136,14 @@
                     android:fontFamily="@font/ubuntu_regular"
                     android:includeFontPadding="false"
                     android:textSize="@dimen/_13ssp"/>
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:id="@+id/imageRemoveWebURL"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_delete"
+                    android:tint="@color/colorWhite"
+                    android:background="@drawable/background_delete"/>
             </LinearLayout>
             <EditText
                 android:layout_width="match_parent"
