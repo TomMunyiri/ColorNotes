@@ -65,18 +65,34 @@
         app:layout_constraintTop_toBottomOf="@id/layoutSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <androidx.recyclerview.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/notesRecyclerView"
-            android:layout_marginStart="@dimen/_2sdp"
-            android:layout_marginEnd="@dimen/_2sdp"
-            android:clipToPadding="false"
-            android:paddingStart="0dp"
-            android:paddingEnd="@dimen/_12sdp"
-            android:paddingBottom="@dimen/_12sdp"
-            android:paddingLeft="0dp"
-            android:paddingRight="@dimen/_12sdp" />
+            android:layout_height="match_parent">
+            <TextView
+                android:drawableTop="@drawable/ic_error"
+                android:drawablePadding="@dimen/_11sdp"
+                android:drawableTint="@color/colorIcons"
+                android:visibility="gone"
+                android:layout_centerInParent="true"
+                android:id="@+id/tvNoNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Use the yellow + button below to add a note"
+                android:textColor="@color/colorIcons"
+                android:fontFamily="@font/ubuntu_regular"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/notesRecyclerView"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginEnd="@dimen/_2sdp"
+                android:clipToPadding="false"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:paddingBottom="@dimen/_12sdp"
+                android:paddingLeft="0dp"
+                android:paddingRight="@dimen/_12sdp" />
+        </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         binding.imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getApplicationContext(), CreateNoteActivity.class),REQUEST_CODE_ADD_NOTE);
+                startActivityForResult(new Intent(getApplicationContext(), CreateNoteActivity.class), REQUEST_CODE_ADD_NOTE);
             }
         });
         //TODO Enable switching between LinearLayout and StaggeredGridLayout
         //binding.notesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        noteList=new ArrayList<>();
-        notesAdapter=new NotesAdapter(noteList,this);
+        binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        noteList = new ArrayList<>();
+        notesAdapter = new NotesAdapter(noteList, this);
         binding.notesRecyclerView.setAdapter(notesAdapter);
         getNotes(REQUEST_CODE_SHOW_NOTES);
         binding.srNotes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -61,15 +61,15 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
 
     @Override
     public void onNoteClicked(Note note, int position) {
-        noteClickedPosition=position;
-        Intent intent=new Intent(getApplicationContext(),CreateNoteActivity.class);
-        intent.putExtra("isViewOrUpdate",true);
-        intent.putExtra("note",note);
-        startActivityForResult(intent,REQUEST_CODE_UPDATE_NOTE);
+        noteClickedPosition = position;
+        Intent intent = new Intent(getApplicationContext(), CreateNoteActivity.class);
+        intent.putExtra("isViewOrUpdate", true);
+        intent.putExtra("note", note);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private void getNotes(final int requestCode){
-        class GetNoteTask extends AsyncTask<Void, Void, List<Note>>{
+    private void getNotes(final int requestCode) {
+        class GetNoteTask extends AsyncTask<Void, Void, List<Note>> {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -85,14 +85,23 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
                 binding.srNotes.setRefreshing(false);
-                if(requestCode==REQUEST_CODE_SHOW_NOTES){
-                    noteList.addAll(notes);
-                    notesAdapter.notifyDataSetChanged();
-                }else{
-                    noteList.add(0,notes.get(0));
-                    notesAdapter.notifyItemInserted(0);
+                if (notes.size() == 0) {
+                    binding.tvNoNotes.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvNoNotes.setVisibility(View.GONE);
+                    if (requestCode == REQUEST_CODE_SHOW_NOTES) {
+                        noteList.addAll(notes);
+                        notesAdapter.notifyDataSetChanged();
+                    } else if (requestCode == REQUEST_CODE_ADD_NOTE) {
+                        noteList.add(0, notes.get(0));
+                        notesAdapter.notifyItemInserted(0);
+                        binding.notesRecyclerView.smoothScrollToPosition(0);
+                    } else if (requestCode == REQUEST_CODE_UPDATE_NOTE) {
+                        noteList.remove(noteClickedPosition);
+                        noteList.add(noteClickedPosition, notes.get(noteClickedPosition));
+                        notesAdapter.notifyItemChanged(noteClickedPosition);
+                    }
                 }
-                binding.notesRecyclerView.smoothScrollToPosition(0);
             }
         }
         new GetNoteTask().execute();
@@ -101,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE_ADD_NOTE && resultCode==RESULT_OK){
+        if (requestCode == REQUEST_CODE_ADD_NOTE && resultCode == RESULT_OK) {
             getNotes(REQUEST_CODE_ADD_NOTE);
-        }else if(requestCode==REQUEST_CODE_UPDATE_NOTE && requestCode==RESULT_OK){
-            if(data!=null){
+        } else if (requestCode == REQUEST_CODE_UPDATE_NOTE && resultCode == RESULT_OK) {
+            if (data != null) {
                 getNotes(REQUEST_CODE_UPDATE_NOTE);
             }
         }
