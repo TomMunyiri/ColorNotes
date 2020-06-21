@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private ActivityMainBinding binding;
     public static final int REQUEST_CODE_ADD_NOTE = 1;
     public static final int REQUEST_CODE_UPDATE_NOTE = 2;
+    public static final int REQUEST_CODE_SHOW_NOTES = 3;
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
     private int noteClickedPosition = -1;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         noteList=new ArrayList<>();
         notesAdapter=new NotesAdapter(noteList,this);
         binding.notesRecyclerView.setAdapter(notesAdapter);
-        getNotes();
+        getNotes(REQUEST_CODE_SHOW_NOTES);
         binding.srNotes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         startActivityForResult(intent,REQUEST_CODE_UPDATE_NOTE);
     }
 
-    private void getNotes(){
+    private void getNotes(final int requestCode){
         class GetNoteTask extends AsyncTask<Void, Void, List<Note>>{
             @Override
             protected void onPreExecute() {
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
                 binding.srNotes.setRefreshing(false);
-                if(noteList.size()==0){
+                if(requestCode==REQUEST_CODE_SHOW_NOTES){
                     noteList.addAll(notes);
                     notesAdapter.notifyDataSetChanged();
                 }else{
@@ -101,7 +102,11 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE_ADD_NOTE && resultCode==RESULT_OK){
-            getNotes();
+            getNotes(REQUEST_CODE_ADD_NOTE);
+        }else if(requestCode==REQUEST_CODE_UPDATE_NOTE && requestCode==RESULT_OK){
+            if(data!=null){
+                getNotes(REQUEST_CODE_UPDATE_NOTE);
+            }
         }
     }
 }
