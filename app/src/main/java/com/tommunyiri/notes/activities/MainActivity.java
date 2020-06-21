@@ -18,15 +18,18 @@ import com.tommunyiri.notes.adapters.NotesAdapter;
 import com.tommunyiri.notes.database.NotesDatabase;
 import com.tommunyiri.notes.databinding.ActivityMainBinding;
 import com.tommunyiri.notes.entities.Note;
+import com.tommunyiri.notes.listeners.NotesListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotesListener {
     private ActivityMainBinding binding;
     public static final int REQUEST_CODE_ADD_NOTE = 1;
+    public static final int REQUEST_CODE_UPDATE_NOTE = 2;
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
+    private int noteClickedPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         //binding.notesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         noteList=new ArrayList<>();
-        notesAdapter=new NotesAdapter(noteList);
+        notesAdapter=new NotesAdapter(noteList,this);
         binding.notesRecyclerView.setAdapter(notesAdapter);
         getNotes();
         binding.srNotes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -53,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 binding.srNotes.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onNoteClicked(Note note, int position) {
+        noteClickedPosition=position;
+        Intent intent=new Intent(getApplicationContext(),CreateNoteActivity.class);
+        intent.putExtra("isViewOrUpdate",true);
+        intent.putExtra("note",note);
+        startActivityForResult(intent,REQUEST_CODE_UPDATE_NOTE);
     }
 
     private void getNotes(){
