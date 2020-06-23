@@ -9,6 +9,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,11 +52,32 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
         noteList = new ArrayList<>();
         notesAdapter = new NotesAdapter(noteList, this);
         binding.notesRecyclerView.setAdapter(notesAdapter);
+
         getNotes(REQUEST_CODE_SHOW_NOTES,false);
+
         binding.srNotes.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 binding.srNotes.setRefreshing(false);
+            }
+        });
+
+        binding.inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                notesAdapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(noteList.size()!=0){
+                    notesAdapter.searchNotes(s.toString());
+                }
             }
         });
     }

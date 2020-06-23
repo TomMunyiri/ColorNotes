@@ -1,9 +1,10 @@
 package com.tommunyiri.notes.adapters;
 
-import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +19,28 @@ import com.tommunyiri.notes.R;
 import com.tommunyiri.notes.entities.Note;
 import com.tommunyiri.notes.listeners.NotesListener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder>{
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
     private List<Note> notes;
     private NotesListener notesListener;
+    private Timer timer;
+    private List<Note> notesSource;
 
     public NotesAdapter(List<Note> notes, NotesListener notesListener) {
         this.notes = notes;
-        this.notesListener=notesListener;
+        this.notesListener = notesListener;
+        notesSource = notes;
     }
 
     @NonNull
     @Override
     public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new NotesViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_container_note,
-                parent,false));
+                parent, false));
     }
 
     @Override
@@ -42,7 +49,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         holder.layoutNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notesListener.onNoteClicked(notes.get(position),position);
+                notesListener.onNoteClicked(notes.get(position), position);
             }
         });
     }
@@ -57,40 +64,75 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         return position;
     }
 
-    static class NotesViewHolder extends RecyclerView.ViewHolder{
+    static class NotesViewHolder extends RecyclerView.ViewHolder {
         TextView textTitle, textSubtitle, textDateTime;
         LinearLayout layoutNote;
         ImageView imageNote;
-        NotesViewHolder(@NonNull View itemView){
+
+        NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             //TODO Replace findViewByID with View Binding
-            textTitle=itemView.findViewById(R.id.textTitle);
-            textSubtitle=itemView.findViewById(R.id.textSubtitle);
-            textDateTime=itemView.findViewById(R.id.textDateTime);
-            layoutNote=itemView.findViewById(R.id.layoutNote);
-            imageNote=itemView.findViewById(R.id.imageNote);
+            textTitle = itemView.findViewById(R.id.textTitle);
+            textSubtitle = itemView.findViewById(R.id.textSubtitle);
+            textDateTime = itemView.findViewById(R.id.textDateTime);
+            layoutNote = itemView.findViewById(R.id.layoutNote);
+            imageNote = itemView.findViewById(R.id.imageNote);
         }
 
-        void setNote(Note note){
+        void setNote(Note note) {
             textTitle.setText(note.getTitle());
-            if(note.getSubtitle().trim().isEmpty()){
+            if (note.getSubtitle().trim().isEmpty()) {
                 textSubtitle.setVisibility(View.GONE);
-            }else{
+            } else {
                 textSubtitle.setText(note.getSubtitle());
             }
             textDateTime.setText(note.getDateTime());
-            GradientDrawable gradientDrawable=(GradientDrawable)layoutNote.getBackground();
-            if(note.getColor()!=null){
+            GradientDrawable gradientDrawable = (GradientDrawable) layoutNote.getBackground();
+            if (note.getColor() != null) {
                 gradientDrawable.setColor(Color.parseColor(note.getColor()));
-            }else{
+            } else {
                 gradientDrawable.setColor(Color.parseColor("#333333"));
             }
-            if(note.getImagePath()!=null){
+            if (note.getImagePath() != null) {
                 imageNote.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
                 imageNote.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 imageNote.setVisibility(View.GONE);
             }
+        }
+    }
+
+    public void searchNotes(final String searchKeyword) {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (searchKeyword.trim().isEmpty()) {
+                    notes = notesSource;
+                } else {
+                    ArrayList<Note> temp = new ArrayList<>();
+                    for (Note note : notesSource) {
+                        if (note.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                                || note.getSubtitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                                || note.getNoteText().toLowerCase().contains(searchKeyword.toLowerCase())) {
+                            temp.add(note);
+                        }
+                    }
+                    notes=temp;
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }, 500);
+    }
+
+    public void cancelTimer(){
+        if(timer!=null){
+            timer.cancel();
         }
     }
 }
