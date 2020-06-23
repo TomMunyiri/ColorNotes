@@ -174,4 +174,23 @@
         android:text="@string/add_web_link"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_12ssp" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/textDeleteNote"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:drawableStart="@drawable/ic_delete"
+        android:drawableLeft="@drawable/ic_delete"
+        android:drawablePadding="@dimen/_10sdp"
+        android:drawableTint="@color/colorDelete"
+        android:fontFamily="@font/ubuntu_medium"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/delete_note"
+        android:textColor="@color/colorDelete"
+        android:textSize="@dimen/_12ssp" />
 </LinearLayout>
