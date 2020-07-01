@@ -15,6 +15,8 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
             <ImageView
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/_2sdp"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:id="@+id/imageBack"
@@ -29,14 +31,14 @@
                 android:layout_marginLeft="@dimen/_6sdp"
                 android:layout_marginRight="@dimen/_12sdp" />
             <ImageView
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
                 android:id="@+id/imageSave"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:background="@drawable/background_done_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/app_name"
-                android:padding="@dimen/_4sdp"
-                android:src="@drawable/ic_done"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_save"
                 android:tint="@color/colorIcons"
                 app:layout_constraintBottom_toBottomOf="@+id/imageBack"
                 app:layout_constraintEnd_toEndOf="parent"
