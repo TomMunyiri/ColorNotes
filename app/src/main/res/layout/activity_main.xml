@@ -7,23 +7,24 @@
     android:background="@color/colorPrimary"
     tools:context=".activities.MainActivity">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/textMyNotes"
-    android:layout_marginStart="@dimen/_12sdp"
-    android:layout_marginTop="@dimen/_20sdp"
-    android:fontFamily="@font/ubuntu_bold"
-    android:includeFontPadding="false"
-    android:layout_marginLeft="@dimen/_12sdp"
-    android:text="@string/my_notes"
-    android:textColor="@color/colorWhite"
-    android:textSize="@dimen/_20ssp"
-    app:layout_constraintTop_toTopOf="parent"/>
-    <LinearLayout
+    <TextView
+        android:id="@+id/textMyNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginLeft="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:includeFontPadding="false"
+        android:text="@string/my_notes"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
         android:id="@+id/layoutSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginLeft="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_15sdp"
@@ -34,19 +35,21 @@
         android:paddingStart="@dimen/_10sdp"
         android:paddingEnd="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@id/textMyNotes">
+
         <ImageView
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_search"
-            android:tint="@color/colorSearchIcon"/>
+            android:tint="@color/colorSearchIcon" />
+
         <EditText
+            android:id="@+id/inputSearch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_35sdp"
-            android:id="@+id/inputSearch"
             android:layout_marginStart="@dimen/_12sdp"
-            android:background="@null"
             android:layout_marginLeft="@dimen/_12sdp"
+            android:background="@null"
             android:fontFamily="@font/ubuntu_regular"
             android:hint="@string/search_notes"
             android:imeOptions="actionDone"
@@ -55,96 +58,115 @@
             android:inputType="text"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorTextHint"
-            android:textSize="@dimen/_13ssp"/>
+            android:textSize="@dimen/_13ssp" />
     </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srNotes"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/layoutQuickActions"
-        app:layout_constraintTop_toBottomOf="@id/layoutSearch"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/layoutSearch">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <TextView
-                android:drawableTop="@drawable/ic_error"
-                android:drawablePadding="@dimen/_11sdp"
-                android:drawableTint="@color/colorIcons"
-                android:visibility="gone"
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/layoutNoNotes"
                 android:layout_centerInParent="true"
-                android:id="@+id/tvNoNotes"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Use the yellow + button below to add a note"
-                android:textColor="@color/colorIcons"
-                android:fontFamily="@font/ubuntu_regular"/>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_notepad"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+                <TextView
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/tvNoNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:text="No notes available"
+                    android:textColor="@color/colorIcons"
+                    android:visibility="visible" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/notesRecyclerView"
                 android:layout_marginStart="@dimen/_2sdp"
                 android:layout_marginEnd="@dimen/_2sdp"
                 android:clipToPadding="false"
                 android:paddingStart="0dp"
-                android:paddingEnd="@dimen/_12sdp"
-                android:paddingBottom="@dimen/_12sdp"
                 android:paddingLeft="0dp"
-                android:paddingRight="@dimen/_12sdp" />
+                android:paddingEnd="@dimen/_12sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:paddingBottom="@dimen/_12sdp" />
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <LinearLayout
+        android:id="@+id/layoutQuickActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/layoutQuickActions"
         android:background="@color/colorQuickActionsBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:layout_marginRight="@dimen/_15sdp"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
             android:id="@+id/imageAddNote"
             android:layout_width="@dimen/_23sdp"
             android:layout_height="@dimen/_23sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_add_outline"
-            android:tint="@color/colorIcons"
-            android:focusable="true" />
-        <ImageView
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp"
-            android:clickable="true"
             android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:src="@drawable/ic_add_outline"
+            android:tint="@color/colorIcons" />
+
+        <ImageView
             android:id="@+id/imageAddImage"
             android:layout_width="@dimen/_23sdp"
             android:layout_height="@dimen/_23sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_image"
-            android:tint="@color/colorIcons"
-            android:focusable="true" />
-        <ImageView
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp"
-            android:clickable="true"
             android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:src="@drawable/ic_image"
+            android:tint="@color/colorIcons" />
+
+        <ImageView
             android:id="@+id/imageAddWebLink"
             android:layout_width="@dimen/_23sdp"
             android:layout_height="@dimen/_23sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
             android:contentDescription="@string/app_name"
+            android:focusable="true"
             android:src="@drawable/ic_web_link"
-            android:tint="@color/colorIcons"
-            android:focusable="true" />
+            android:tint="@color/colorIcons" />
     </LinearLayout>
+
     <ImageView
+        android:id="@+id/imageAddNoteMain"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:id="@+id/imageAddNoteMain"
         android:layout_marginEnd="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_30sdp"
         android:background="@drawable/background_add_button"
         android:contentDescription="@string/app_name"
         android:padding="@dimen/_5sdp"
@@ -152,6 +174,5 @@
         android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/layoutQuickActions"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layoutQuickActions"
-        android:layout_marginRight="@dimen/_30sdp" />
+        app:layout_constraintTop_toTopOf="@id/layoutQuickActions" />
 </androidx.constraintlayout.widget.ConstraintLayout>

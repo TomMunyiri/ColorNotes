@@ -228,9 +228,9 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                 super.onPostExecute(notes);
                 binding.srNotes.setRefreshing(false);
                 if (notes.size() == 0) {
-                    binding.tvNoNotes.setVisibility(View.VISIBLE);
+                    binding.layoutNoNotes.setVisibility(View.VISIBLE);
                 } else {
-                    binding.tvNoNotes.setVisibility(View.GONE);
+                    binding.layoutNoNotes.setVisibility(View.GONE);
                     if (requestCode == REQUEST_CODE_SHOW_NOTES) {
                         noteList.addAll(notes);
                         notesAdapter.notifyDataSetChanged();
