@@ -140,12 +140,11 @@
     </LinearLayout>
 
     <TextView
+        android:background="?attr/selectableItemBackground"
         android:id="@+id/textAddImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
         android:drawableStart="@drawable/ic_image"
         android:drawableLeft="@drawable/ic_image"
         android:drawablePadding="@dimen/_10sdp"
@@ -158,12 +157,11 @@
         android:textSize="@dimen/_12ssp" />
 
     <TextView
+        android:background="?attr/selectableItemBackground"
         android:id="@+id/textAddUrl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
         android:drawableStart="@drawable/ic_web_link"
         android:drawableLeft="@drawable/ic_web_link"
         android:drawablePadding="@dimen/_10sdp"
@@ -176,13 +174,12 @@
         android:textSize="@dimen/_12ssp" />
 
     <TextView
+        android:background="?attr/selectableItemBackground"
         android:visibility="gone"
         android:id="@+id/textDeleteNote"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
         android:drawableStart="@drawable/ic_delete"
         android:drawableLeft="@drawable/ic_delete"
         android:drawablePadding="@dimen/_10sdp"
