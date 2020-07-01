@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
     private List<Note> noteList;
     private NotesAdapter notesAdapter;
     private int noteClickedPosition = -1;
-    private AlertDialog dialogAddURL;
+    private AlertDialog dialogAddURL, dialogAppInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +93,13 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
             }
         });
 
+        binding.imageAppInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAppInfoDialog();
+            }
+        });
+
         //TODO Enable switching between LinearLayout and StaggeredGridLayout
         //binding.notesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.notesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -127,6 +134,25 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                 }
             }
         });
+    }
+
+    private void showAppInfoDialog(){
+        if (dialogAppInfo == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_about_app, (ViewGroup) findViewById(R.id.layoutAppInfoContainer));
+            builder.setView(view);
+            dialogAppInfo = builder.create();
+            if (dialogAppInfo.getWindow() != null) {
+                dialogAppInfo.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            view.findViewById(R.id.textDismissDialog).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogAppInfo.dismiss();
+                }
+            });
+        }
+        dialogAppInfo.show();
     }
 
     private void selectImage() {

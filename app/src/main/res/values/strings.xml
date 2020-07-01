@@ -14,4 +14,8 @@
     <string name="add">ADD</string>
     <string name="delete_note">Delete Note</string>
     <string name="are_you_sure_you_want_to_delete_this_note">Are you sure you want to delete this note?</string>
+    <string name="color_notes">Color Notes</string>
+    <string name="app_version">v 1.1.0</string>
+    <string name="developer_name">Developed by Tom Munyiri</string>
+    <string name="ok">OK</string>
 </resources>
