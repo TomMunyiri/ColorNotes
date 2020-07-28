@@ -26,6 +26,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -35,13 +36,14 @@ import com.tommunyiri.notes.database.NotesDatabase;
 import com.tommunyiri.notes.databinding.ActivityMainBinding;
 import com.tommunyiri.notes.entities.Note;
 import com.tommunyiri.notes.listeners.NotesListener;
+import com.tommunyiri.notes.utils.IMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class MainActivity extends AppCompatActivity implements NotesListener {
+public class MainActivity extends AppCompatActivity implements NotesListener, IMainActivity {
     private ActivityMainBinding binding;
     public static final int REQUEST_CODE_ADD_NOTE = 1;
     public static final int REQUEST_CODE_UPDATE_NOTE = 2;
@@ -303,6 +305,18 @@ public class MainActivity extends AppCompatActivity implements NotesListener {
                         Toasty.error(this,exception.getMessage(),Toasty.LENGTH_SHORT,true).show();
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    public void hideKeyboard() {
+        if(getCurrentFocus()!=null){
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
             }
         }
     }
