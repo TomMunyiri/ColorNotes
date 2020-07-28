@@ -25,6 +25,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,7 @@ import com.tommunyiri.notes.R;
 import com.tommunyiri.notes.database.NotesDatabase;
 import com.tommunyiri.notes.databinding.ActivityCreateNoteBinding;
 import com.tommunyiri.notes.entities.Note;
+import com.tommunyiri.notes.utils.ICreateNoteActivity;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -43,7 +45,7 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class CreateNoteActivity extends AppCompatActivity {
+public class CreateNoteActivity extends AppCompatActivity implements ICreateNoteActivity {
     private ActivityCreateNoteBinding binding;
     private String selectedNoteColor;
     private String selectedImagePath;
@@ -64,6 +66,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                hideKeyboard();
             }
         });
 
@@ -122,6 +125,32 @@ public class CreateNoteActivity extends AppCompatActivity {
         initMiscellaneous();
         setSubtitleIndicatorColor();
     }
+
+    //hide soft keyboard
+    @Override
+    public void hideKeyboard() {
+        if(getCurrentFocus()!=null){
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*//Hide keyboard in fragment
+    //hide soft keyboard
+    public static void hideKeyboard(Context context, View view){
+        InputMethodManager inputMethodManager=(InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+    }*/
+
+    /*@Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        hideKeyboard();
+    }*/
 
     private void setViewOrUpdateNote() {
         binding.inputNoteTitle.setText(alreadyAvailableNote.getTitle());

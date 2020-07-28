@@ -1,6 +1,6 @@
 package com.tommunyiri.notes.utils;
 
-public interface IMainActivity {
+public interface ICreateNoteActivity {
     void onBackPressed();
     void hideKeyboard();
 }

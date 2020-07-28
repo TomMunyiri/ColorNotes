@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -21,14 +20,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.tommunyiri.notes.R;
 import com.tommunyiri.notes.adapters.NotesAdapter;
@@ -36,14 +32,13 @@ import com.tommunyiri.notes.database.NotesDatabase;
 import com.tommunyiri.notes.databinding.ActivityMainBinding;
 import com.tommunyiri.notes.entities.Note;
 import com.tommunyiri.notes.listeners.NotesListener;
-import com.tommunyiri.notes.utils.IMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class MainActivity extends AppCompatActivity implements NotesListener, IMainActivity {
+public class MainActivity extends AppCompatActivity implements NotesListener {
     private ActivityMainBinding binding;
     public static final int REQUEST_CODE_ADD_NOTE = 1;
     public static final int REQUEST_CODE_UPDATE_NOTE = 2;
@@ -309,15 +304,4 @@ public class MainActivity extends AppCompatActivity implements NotesListener, IM
         }
     }
 
-    @Override
-    public void hideKeyboard() {
-        if(getCurrentFocus()!=null){
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            try{
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
-            }catch (NullPointerException e){
-                e.printStackTrace();
-            }
-        }
-    }
 }
